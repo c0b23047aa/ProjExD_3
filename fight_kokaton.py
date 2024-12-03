@@ -146,6 +146,10 @@ class Score:
     スコアを表示するクラス
     """
     def __init__(self):
+        """
+        スコアの初期値の設定、フォントの設定、
+        文字列Surfaceの生成を行う
+        """
         self.num_score = 0
         self.fonto = pg.font.SysFont("hgp創英角ﾎﾟｯﾌﾟ体", 30)
         self.img = self.fonto.render(f"スコア：{self.num_score}", 0, (0, 0, 255)) 
