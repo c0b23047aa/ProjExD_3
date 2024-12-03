@@ -155,6 +155,25 @@ class Score:
         screen.blit(self.img, [100, HEIGHT-50])
 
 
+class Explosion:
+    def __init__(self, screen):
+        self.img1 = pg.image.load("fig/explosion.gif")
+        self.img2 = pg.image.load("fig/explosion.gif")
+        self.img2 = pg.transform.flip(self.img2, True, True)
+        self.center = self.center
+        self.life = 10
+        screen.blit(self.img1, self.center)        
+
+    def update(self, screen, tmr):
+        life -= 1
+        if life > 0:
+            if tmr % 10 == 0:
+                screen.blit(self.img1, self.center)
+            else:
+                screen.blit(self.img2, self.center)
+            self.update()
+             
+
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))    
@@ -166,6 +185,7 @@ def main():
     bombs = [Bomb((255, 0, 0), 10) for _ in range(NUM_OF_BOMBS)]   
     score = Score()
     beams = []  #Beamクラスのための空リスト
+    exp_lst = [] #Explosionインスタンス用の空リスト
     clock = pg.time.Clock()
     tmr = 0
     while True:
@@ -197,9 +217,11 @@ def main():
                         bombs[i] = None
                         bird.change_img(6, screen)
                         score.num_score += 1
+                        exp_lst.append(Explosion(screen))
                         pg.display.update()
             beams = [beam for beam in beams if beam is not None]
             #ビームリストに対して，要素がNoneでないものだけのリストに更新
+            exp_lst = [exp for exp in exp_lst if exp.life > 0]
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
         # beam.update(screen)
@@ -213,6 +235,8 @@ def main():
                 del beams[i]
         # bomb2.update(screen)
         score.update(screen)
+        for exp in exp_lst:
+            exp.update()
         pg.display.update()
         tmr += 1
         clock.tick(50)
